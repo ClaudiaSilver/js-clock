@@ -18,7 +18,7 @@
 
   <style>
     html {
-      /* background: #018DED url(https://images.pexels.com/photos/910411/pexels-photo-910411.jpeg?cs=srgb&dl=clouds-dawn-daylight-910411.jpg&fm=jpg); */
+      background: #018DED; 
       background-size: cover;
       font-family: 'helvetica neue';
       text-align: center;
@@ -37,7 +37,7 @@
     .clock {
       width: 30rem;
       height: 30rem;
-      border: 20px solid white;
+      border: 20px solid #E8F2FA;
       border-radius: 50%;
       margin: 50px auto;
       position: relative;
@@ -57,15 +57,21 @@
     }
 
     .hand {
-      width: 50%;
-      height: 6px;
-      background: black;
       position: absolute;
-      top: 50%;
-      transform-origin: 100%;
-      transform: rotate(90deg);
-      transition: all 0.05s;
-      transition-timing-function: cubic-bezier(0.1, 2.7, 0.6, 1); 
+      left: 50%;
+      bottom: 50%;
+      height: 50%;
+      transition: transform .05 cubic-bezier(0, 2, .7, 1);
+      transform-origin: 50% 100%;
+    }
+
+    .hand::before {
+      content: '';
+      display: block;
+      position: relative;
+      border-radius: 70%;
+      border: 3px solid #333333;
+      height: 100%;
     }
 
     
@@ -74,14 +80,11 @@
     
 
   <script>
-
-
     const allHands = document.querySelectorAll('.hand');
 
     const secondHand = document.querySelector('.second-hand');
     const minsHand = document.querySelector('.min-hand');
     const hourHand = document.querySelector('.hour-hand');
-
 
     function setDate() {
       const now = new Date(); // gets current time and date
@@ -105,17 +108,37 @@
           allHands.forEach(hand => hand.style.transition = '')
         }
 
-      // to change the background depending on time of day
-      if (7 <= hours && hours < 19) {
-        document.body.style.backgroundImage = "url('https://images.pexels.com/photos/936150/pexels-photo-936150.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260')";
+      // to change the background depending on time of day:
+      // 1. create object containing all links to images 
+
+      const allImages = {
+        morning: 'https://images.pexels.com/photos/910411/pexels-photo-910411.jpeg?cs=srgb&dl=clouds-dawn-daylight-910411.jpg&fm=jpg',
+        afternoon: 'https://images.unsplash.com/photo-1451336819701-5a83f6534292?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80',
+        evening: 'https://images.unsplash.com/photo-1503803548695-c2a7b4a5b875?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+        night: 'https://images.unsplash.com/photo-1437751059337-ea72d4f73fcf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1342&q=80'
+
+      };
+
+      // 2. set the image 
+
+      const setBackground = (image) => {
+        document.body.style.background = "url('"+allImages[image]+"')";
+        document.body.style.backgroundSize = 'cover';
+      };
+    
+      if (hours >= 22 && hours <= 6){
+        setBackground('night');
+      } else if(hours >= 7 && hours <=12){
+        setBackground('morning');
+      } else if(hours >= 13 && hours ){
+        setBackground('afternoon');
       } else {
-        document.body.style.backgroundImage = "url('https://images.pexels.com/photos/977736/pexels-photo-977736.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260')";
+        setBackground('evening');
       }
-
     }
+    
     setInterval(setDate, 1000); // calls a function at specified intervals
-
-
   </script>
+
 </body>
 </html>
